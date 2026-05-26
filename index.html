@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hamidreza Abolhassani — Full-Stack Developer · AI Automation & SaaS</title>
+<meta name="description" content="Full-stack developer building production AI automation systems, SaaS products, and trading tools from scratch on Linux VPS.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700;9..144,800;9..144,900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0e0c08;
+    --bg-soft: #14110b;
+    --ink: #f4f1e8;
+    --ink-soft: #d8d2c0;
+    --muted: #7a7264;
+    --rust: #c25a3b;
+    --rust-soft: #a8442a;
+    --line: rgba(244, 241, 232, 0.08);
+    --line-strong: rgba(244, 241, 232, 0.15);
+  }
+
+  html {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  body {
+    background: var(--bg);
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* Grain texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    mix-blend-mode: overlay;
+  }
+
+  /* Vignette */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 998;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.5) 100%);
+  }
+
+  ::selection {
+    background: var(--rust);
+    color: var(--bg);
+  }
+
+  /* ============ NAV ============ */
+  .nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 24px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    mix-blend-mode: difference;
+  }
+
+  .nav-mono {
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--ink);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--ink);
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  .nav-mono:hover {
+    background: var(--ink);
+    color: var(--bg);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  .nav-links a {
+    color: var(--ink);
+    text-decoration: none;
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+  }
+  .nav-links a:hover {
+    opacity: 1;
+  }
+
+  /* ============ HERO ============ */
+  .hero {
+    min-height: 100vh;
+    padding: 120px 40px 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+  }
+
+  .hero-meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-bottom: 60px;
+  }
+  .hero-meta span {
+    position: relative;
+    padding-left: 14px;
+  }
+  .hero-meta span::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    background: var(--rust);
+    border-radius: 50%;
+  }
+
+  .hero-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(60px, 11vw, 180px);
+    line-height: 0.88;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+  }
+  .hero-title em {
+    font-style: italic;
+    font-weight: 400;
+    font-variation-settings: 'opsz' 144, 'SOFT' 100;
+    color: var(--rust);
+  }
+
+  .hero-bottom {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 80px;
+    align-items: end;
+    margin-top: 80px;
+  }
+
+  .hero-tagline {
+    max-width: 480px;
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 300;
+    line-height: 1.4;
+    color: var(--ink-soft);
+  }
+  .hero-tagline strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .hero-stat {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-align: right;
+  }
+  .hero-stat-num {
+    font-family: 'Fraunces', serif;
+    font-size: 56px;
+    font-weight: 300;
+    color: var(--ink);
+    display: block;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  /* Scroll indicator */
+  .scroll-hint {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    animation: bounce 2.5s ease-in-out infinite;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.4; }
+    50% { transform: translateX(-50%) translateY(8px); opacity: 1; }
+  }
+
+  /* ============ MARQUEE ============ */
+  .marquee {
+    overflow: hidden;
+    padding: 50px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: var(--bg-soft);
+  }
+  .marquee-track {
+    display: flex;
+    gap: 60px;
+    white-space: nowrap;
+    animation: scroll 40s linear infinite;
+  }
+  @keyframes scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  .marquee-item {
+    font-family: 'Fraunces', serif;
+    font-size: 60px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 60px;
+  }
+  .marquee-item::after {
+    content: '✦';
+    color: var(--rust);
+    font-style: normal;
+    font-size: 24px;
+  }
+
+  /* ============ SECTIONS ============ */
+  section {
+    padding: 140px 40px;
+    position: relative;
+  }
+
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--rust);
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(40px, 6vw, 88px);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    margin-bottom: 80px;
+    max-width: 900px;
+  }
+  .section-title em {
+    font-style: italic;
+    color: var(--rust);
+    font-weight: 400;
+  }
+
+  /* ============ WORK SECTION ============ */
+  .work-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .work-item {
+    border-top: 1px solid var(--line-strong);
+    padding: 50px 0;
+    display: grid;
+    grid-template-columns: 80px 1fr 240px 120px;
+    gap: 40px;
+    align-items: start;
+    transition: padding 0.5s ease;
+    cursor: default;
+  }
+  .work-item:last-child {
+    border-bottom: 1px solid var(--line-strong);
+  }
+  .work-item:hover {
+    padding-left: 24px;
+  }
+  .work-item:hover .work-title {
+    color: var(--rust);
+  }
+  .work-item:hover .work-arrow {
+    transform: translateX(8px);
+    color: var(--rust);
+  }
+
+  .work-index {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    padding-top: 6px;
+  }
+
+  .work-info h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 36px;
+    line-height: 1.1;
+    margin-bottom: 12px;
+    color: var(--ink);
+    transition: color 0.4s ease;
+  }
+  .work-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 36px;
+    line-height: 1.1;
+    margin-bottom: 12px;
+    color: var(--ink);
+    transition: color 0.4s ease;
+  }
+  .work-info p {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    max-width: 540px;
+  }
+
+  .work-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding-top: 12px;
+  }
+  .work-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    padding: 5px 10px;
+    border: 1px solid var(--line-strong);
+    border-radius: 100px;
+  }
+
+  .work-arrow {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    color: var(--muted);
+    text-align: right;
+    padding-top: 4px;
+    transition: all 0.4s ease;
+    text-decoration: none;
+  }
+
+  /* ============ CAPABILITIES ============ */
+  .capabilities {
+    background: var(--bg-soft);
+  }
+
+  .cap-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line-strong);
+    margin-top: 60px;
+  }
+
+  .cap-item {
+    background: var(--bg-soft);
+    padding: 48px 36px;
+    transition: background 0.4s ease;
+  }
+  .cap-item:hover {
+    background: var(--bg);
+  }
+
+  .cap-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--rust);
+    letter-spacing: 1.5px;
+    margin-bottom: 24px;
+  }
+
+  .cap-item h4 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 1.2;
+    margin-bottom: 14px;
+    color: var(--ink);
+  }
+
+  .cap-item p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ============ PHILOSOPHY ============ */
+  .philosophy {
+    padding: 200px 40px;
+    text-align: center;
+  }
+
+  .philosophy-quote {
+    max-width: 900px;
+    margin: 0 auto;
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(28px, 4vw, 52px);
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .philosophy-quote em {
+    font-style: italic;
+    color: var(--rust);
+    font-weight: 400;
+  }
+
+  .philosophy-attr {
+    margin-top: 60px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .philosophy-attr::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: var(--rust);
+    margin: 0 auto 16px;
+  }
+
+  /* ============ CONTACT ============ */
+  .contact {
+    border-top: 1px solid var(--line);
+    padding: 140px 40px 60px;
+    background: var(--bg-soft);
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    margin-bottom: 100px;
+  }
+
+  .contact-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(48px, 7vw, 100px);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+  }
+  .contact-title em {
+    font-style: italic;
+    color: var(--rust);
+    font-weight: 400;
+  }
+
+  .contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding-top: 40px;
+  }
+
+  .contact-row {
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 20px;
+  }
+  .contact-row-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .contact-row a, .contact-row span {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 400;
+    transition: color 0.3s ease;
+    display: block;
+  }
+  .contact-row a:hover {
+    color: var(--rust);
+  }
+
+  /* ============ FOOTER ============ */
+  .footer {
+    padding-top: 40px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  /* ============ REVEAL ANIMATIONS ============ */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .reveal-words .word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(60px);
+    transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal-words.visible .word {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 900px) {
+    .nav { padding: 16px 24px; }
+    .nav-links { gap: 16px; }
+    .nav-links li:not(:last-child) { display: none; }
+    .hero { padding: 100px 24px 60px; }
+    .hero-bottom { grid-template-columns: 1fr; gap: 40px; }
+    .hero-stat { text-align: left; }
+    section { padding: 80px 24px; }
+    .work-item { grid-template-columns: 40px 1fr; gap: 16px; }
+    .work-tags, .work-arrow { display: none; }
+    .work-item:hover { padding-left: 8px; }
+    .cap-grid { grid-template-columns: 1fr; }
+    .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+    .contact { padding: 80px 24px 40px; }
+    .marquee-item { font-size: 36px; gap: 30px; }
+    .marquee { padding: 30px 0; }
+    .philosophy { padding: 100px 24px; }
+  }
+</style>
+</head>
+
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#" class="nav-mono">HA</a>
+  <ul class="nav-links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#capabilities">Capabilities</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="https://github.com/abolhassani-dev" target="_blank">GitHub</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-meta">
+    <span>Istanbul · Türkiye</span>
+    <span>Available for Engagements 2026</span>
+  </div>
+
+  <h1 class="hero-title reveal-words">
+    <span class="word">Hamidreza</span><br>
+    <span class="word">Abol<em>hassani</em>.</span>
+  </h1>
+
+  <div class="hero-bottom">
+    <p class="hero-tagline reveal">
+      <strong>Full-stack developer</strong> building production AI automation systems, SaaS platforms, and trading tools — from scratch on Linux VPS.
+    </p>
+    <div class="hero-stat reveal">
+      <span class="hero-stat-num">5+</span>
+      Years building<br>real things
+    </div>
+    <div class="hero-stat reveal">
+      <span class="hero-stat-num">04</span>
+      Active projects<br>in production
+    </div>
+  </div>
+
+  <div class="scroll-hint">Scroll ↓</div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee">
+  <div class="marquee-track">
+    <span class="marquee-item">AI Automation</span>
+    <span class="marquee-item">Voice Agents</span>
+    <span class="marquee-item">SaaS Architecture</span>
+    <span class="marquee-item">Algorithmic Trading</span>
+    <span class="marquee-item">Payment Systems</span>
+    <span class="marquee-item">AI Automation</span>
+    <span class="marquee-item">Voice Agents</span>
+    <span class="marquee-item">SaaS Architecture</span>
+    <span class="marquee-item">Algorithmic Trading</span>
+    <span class="marquee-item">Payment Systems</span>
+  </div>
+</div>
+
+<!-- WORK -->
+<section id="work">
+  <div class="section-num reveal">— 01 / Selected work</div>
+  <h2 class="section-title reveal">
+    Things I've actually <em>shipped</em>.
+  </h2>
+
+  <div class="work-grid">
+    <div class="work-item reveal">
+      <div class="work-index">01</div>
+      <div class="work-info">
+        <div class="work-title">Versucture — SMC Trading Toolkit</div>
+        <p>A complete Smart Money Concepts trading system with custom Pine Script indicators on TradingView and multi-symbol Telegram screeners delivering real-time POI alerts. Live since 2020, with a 3-person dev team.</p>
+      </div>
+      <div class="work-tags">
+        <span class="work-tag">Pine Script</span>
+        <span class="work-tag">Telegram</span>
+        <span class="work-tag">SMC</span>
+      </div>
+      <a href="https://github.com/abolhassani-dev/versucture-smc-demo" target="_blank" class="work-arrow">→</a>
+    </div>
+
+    <div class="work-item reveal">
+      <div class="work-index">02</div>
+      <div class="work-info">
+        <div class="work-title">NabzChat — Multi-Tenant SaaS</div>
+        <p>A no-code chatbot builder for WhatsApp, Telegram, and Instagram with an integrated AI voice receptionist. Built from scratch on Linux VPS — direct API integrations, queue and state management, LLM guardrails preventing hallucinated prices or dates.</p>
+      </div>
+      <div class="work-tags">
+        <span class="work-tag">SaaS</span>
+        <span class="work-tag">Voice AI</span>
+        <span class="work-tag">Multi-tenant</span>
+      </div>
+      <span class="work-arrow">●</span>
+    </div>
+
+    <div class="work-item reveal">
+      <div class="work-index">03</div>
+      <div class="work-info">
+        <div class="work-title">AI Video Pipeline (n8n)</div>
+        <p>Multi-stage automated pipeline generating short-form video from a single Telegram command: GPT-4 → Fal.ai Flux → Kling → ElevenLabs → Creatomate. Async polling, error handling, human-in-the-loop approval.</p>
+      </div>
+      <div class="work-tags">
+        <span class="work-tag">n8n</span>
+        <span class="work-tag">GPT-4</span>
+        <span class="work-tag">Orchestration</span>
+      </div>
+      <a href="https://github.com/abolhassani-dev/n8n-ai-video-pipeline" target="_blank" class="work-arrow">→</a>
+    </div>
+
+    <div class="work-item reveal">
+      <div class="work-index">04</div>
+      <div class="work-info">
+        <div class="work-title">Production Payment Platform (NDA)</div>
+        <p>Sole developer and operator of a live PHP payment platform handling real financial transactions. Full ownership of code, database, and infrastructure. AI-augmented debugging on production systems.</p>
+      </div>
+      <div class="work-tags">
+        <span class="work-tag">PHP</span>
+        <span class="work-tag">MySQL</span>
+        <span class="work-tag">Production</span>
+      </div>
+      <span class="work-arrow">●</span>
+    </div>
+  </div>
+</section>
+
+<!-- CAPABILITIES -->
+<section id="capabilities" class="capabilities">
+  <div class="section-num reveal">— 02 / What I do</div>
+  <h2 class="section-title reveal">
+    Skills that <em>compound</em>.
+  </h2>
+
+  <div class="cap-grid">
+    <div class="cap-item reveal">
+      <div class="cap-num">01 — DEEP DEBUGGING</div>
+      <h4>Root-cause investigation</h4>
+      <p>Tracing issues from symptom down to OS, network, and application layers. Found IPv6 routing failures in production curl calls. Fixed bugs in code I didn't write.</p>
+    </div>
+
+    <div class="cap-item reveal">
+      <div class="cap-num">02 — PRODUCTION RISK</div>
+      <h4>Cautious by design</h4>
+      <p>Scenario-based reasoning and step-by-step verification before any change in live systems. Risk discipline that comes from running real money on real infrastructure.</p>
+    </div>
+
+    <div class="cap-item reveal">
+      <div class="cap-num">03 — PRODUCT INSTINCT</div>
+      <h4>Architecture-first thinking</h4>
+      <p>Choosing the right abstraction and UX before writing code. Why build the wrong thing fast when you can build the right thing well?</p>
+    </div>
+
+    <div class="cap-item reveal">
+      <div class="cap-num">04 — TECH RESEARCH</div>
+      <h4>Finding what fits</h4>
+      <p>Evaluating tools, libraries, and workarounds under real constraints. From WireGuard variants to async API orchestration patterns.</p>
+    </div>
+
+    <div class="cap-item reveal">
+      <div class="cap-num">05 — STACK FLUENCY</div>
+      <h4>Polyglot delivery</h4>
+      <p>Ships across PHP, JavaScript, Pine Script, n8n, and Cloudflare Workers. The right tool for the actual problem, not the favorite tool.</p>
+    </div>
+
+    <div class="cap-item reveal">
+      <div class="cap-num">06 — RESTRICTED UX</div>
+      <h4>Designed for friction</h4>
+      <p>Building for users behind regional restrictions, VPNs, and unstable connections. Most apps fail here. Mine don't.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PHILOSOPHY -->
+<section class="philosophy">
+  <p class="philosophy-quote reveal">
+    "Anyone can chain APIs in a no-code tool. I build the <em>production stack from scratch</em> — direct integrations, custom backends, queue and state management — because that's where reliability comes from."
+  </p>
+  <div class="philosophy-attr reveal">— Working principle</div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact">
+  <div class="contact-grid">
+    <div>
+      <div class="section-num reveal">— 03 / Get in touch</div>
+      <h2 class="contact-title reveal">
+        Let's build<br>something <em>real</em>.
+      </h2>
+    </div>
+
+    <div class="contact-info">
+      <div class="contact-row reveal">
+        <span class="contact-row-label">Email</span>
+        <a href="mailto:hr.dev.abolhassani@gmail.com">hr.dev.abolhassani@gmail.com</a>
+      </div>
+      <div class="contact-row reveal">
+        <span class="contact-row-label">WhatsApp · Türkiye</span>
+        <a href="https://wa.me/905392289969" target="_blank">+90 539 228 9969</a>
+      </div>
+      <div class="contact-row reveal">
+        <span class="contact-row-label">WhatsApp · Iran</span>
+        <a href="https://wa.me/989360101949" target="_blank">+98 936 010 1949</a>
+      </div>
+      <div class="contact-row reveal">
+        <span class="contact-row-label">GitHub</span>
+        <a href="https://github.com/abolhassani-dev" target="_blank">github.com/abolhassani-dev</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>© 2026 · Hamidreza Abolhassani</span>
+    <span>Built from Istanbul</span>
+  </div>
+</section>
+
+<script>
+  // ============ LENIS SMOOTH SCROLL ============
+  const lenis = new Lenis({
+    duration: 1.4,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    smoothWheel: true,
+    smoothTouch: false,
+  });
+
+  function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+  gsap.ticker.lagSmoothing(0);
+
+  // ============ HERO WORD ANIMATION ON LOAD ============
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.querySelectorAll('.reveal-words').forEach(el => {
+        el.classList.add('visible');
+      });
+      const heroReveals = document.querySelectorAll('.hero .reveal');
+      heroReveals.forEach((el, i) => {
+        setTimeout(() => el.classList.add('visible'), 800 + i * 150);
+      });
+    }, 100);
+  });
+
+  // ============ SCROLL REVEAL ============
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -80px 0px' });
+
+  document.querySelectorAll('section .reveal').forEach(el => {
+    observer.observe(el);
+  });
+
+  // ============ SMOOTH SCROLL ON ANCHOR CLICK ============
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        lenis.scrollTo(target, { offset: -40, duration: 1.8 });
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
